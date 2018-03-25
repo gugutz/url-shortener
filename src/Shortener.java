@@ -1,70 +1,53 @@
 package url_shortener.src;
 
+import url_shortener.src.Link;
 import java.lang.Math;
 import java.util.Random;
-import java.net.URI;
-import javax.swing.JOptionPane;
 import java.util.HashMap;
-import java.util.Map;
 
-import java.util.Set;
-import java.util.Arrays;
 import java.util.HashSet;
 
 
-/**
- * Shortener
- */
-
 public class Shortener {
 
-	private int hashKey = 0;
-	private String shortURL = null;
-	private String domainName = "www.short.com/";
-	String[] urls = { new String(url), new String("Mike") };
-	private int hits = 1;
+    private int hashKey = 0;
+    private String domainName = "www.short.com/";
+    private int hits;
+    private HashMap<String, Link> urls;
+    
+
+     // constructor
+    public Shortener() {
+        urls = new HashMap<>();
+    }
 
 
-	 // constructor
-	public Shortener() {
-		Map<String, String> hashObject = new HashMap<String, String>();
-	}
+    public String generateHashKey(String url) {
+        Random randomNumber = new Random();
+        this.hashKey = (url.length() * randomNumber.nextInt(500)); 
+        String stringKey = Integer.toString(this.hashKey);
+        if (!urls.containsKey(this.hashKey)) {
+            return null;
+        }
 
-	public int generateHashKey(String url) {
-		// generating random multiplier factor
-		Random randomNumber = new Random();
-		// hashKey is equivalent to the lenght of the URL * a random integer from 0 to 254
-		this.hashKey = (url.length() * randomNumber.nextInt(500));
+        return stringKey;
+    }
 
-		String stringKey = Integer.toString(this.hashKey);
-		String url = hashObject.get(stringKey);
-		if(url != null) {
-			return true;
-		}	
-		else{
-			return false;
-		}
+    public String shortenURL(String url) {
+        Link shortURL = new Link(url);
+        String hash = generateHashKey(url);
+        urls.put(hash, shortURL);
 
-		// saving the key and the url value on a HashMap object
-		return this.hashKey;
-	}
+        return hash;
+    }
 
-	public String getShortURL(int key, String url) {
-		System.out.println(Arrays.toString(this.urls));
-		System.out.println("Object: " + hashObject.get(key)); 
-		this.shortURL = this.domainName + "k" + key;
-		String stringKey = Integer.toString(this.hashKey);
-		hashObject.put( stringKey , new String( this.shortURL ));
+    public Link getShortURL(String hash) {
+        if (!urls.containsKey(hash)) {
+            return null;
+        }
+        Link shortURL = urls.get(hash);
 
-		this.hits =+ 1;
-		return this.shortURL;
-	}
-
-	public boolean checkKey() {
-
-		
-	public int getHits() {
-		this.hits++;
-		return this.hits;
-	}
+        shortURL.hit();
+        return shortURL;
+    }
 }
