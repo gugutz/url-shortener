@@ -1,43 +1,53 @@
-package url_shortener.src;
+package url_shortener.java.src;
 
 public class Base62 {
 
-	public static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	private static final char[] digitsChar = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+	private static final int BASE = digitsChar.length;
+	private static final int FAST_SIZE = 'z';
+	private static final int[] digitsIndex = new int[FAST_SIZE + 1];
 
-	public static final int BASE = ALPHABET.length();
 
-	private Base62() {}
-
-	public static String fromBase10(int i) {
-		StringBuilder sb = new StringBuilder("");
-		if (i == 0) {
-			return "a";
-		}
-		while (i > 0) {
-			i = fromBase10(i, sb);
-		}
-		return sb.reverse().toString();
+	static {
+		 for (int i = 0; i < FAST_SIZE; i++) {
+			  digitsIndex[i] = -1;
+		 }
+		 for (int i = 0; i < BASE; i++) {
+			  digitsIndex[digitsChar[i]] = i;
+		 }
 	}
 
-	private static int fromBase10(int i, final StringBuilder sb) {
-		int rem = i % BASE;
-		sb.append(ALPHABET.charAt(rem));
-		return i / BASE;
+	public static long decode(String s) {
+		 long result = 0L;
+		 long multiplier = 1;
+		 for (int pos = s.length() - 1; pos >= 0; pos--) {
+			  int index = getIndex(s, pos);
+			  result += index * multiplier;
+			  multiplier *= BASE;
+		 }
+		 return result;
 	}
 
-	public static int toBase10(String str) {
-		return toBase10(new StringBuilder(str).reverse().toString().toCharArray());
+	public static String encode(int number) {
+		 if (number < 0) throw new IllegalArgumentException("Number(Base62) must be positive: " + number);
+		 if (number == 0) return "0";
+		 StringBuilder buf = new StringBuilder();
+		 while (number != 0) {
+			  buf.append(digitsChar[(int) (number % BASE)]);
+			  number /= BASE;
+		 }
+		 return buf.reverse().toString();
 	}
 
-	private static int toBase10(char[] chars) {
-		int n = 0;
-		for (int i = chars.length - 1; i >= 0; i--) {
-			n += toBase10(ALPHABET.indexOf(chars[i]), i);
-		}
-		return n;
-	}
-
-	private static int toBase10(int n, int pow) {
-		return n * (int) Math.pow(BASE, pow);
+	private static int getIndex(String s, int pos) {
+		 char c = s.charAt(pos);
+		 if (c > FAST_SIZE) {
+			  throw new IllegalArgumentException("Unknow character for Base62: " + s);
+		 }
+		 int index = digitsIndex[c];
+		 if (index == -1) {
+			  throw new IllegalArgumentException("Unknow character for Base62: " + s);
+		 }
+		 return index;
 	}
 }
