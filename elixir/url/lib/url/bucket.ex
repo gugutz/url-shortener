@@ -15,7 +15,7 @@ defmodule URL.Bucket do
   end
 
   def put(bucket, key, value) do
-    Agent.put(bucket, &Map.put(&1, key, value))
+    Agent.update(bucket, &Map.put(&1, key, value))
   end
 
   def delete(bucket, key) do
