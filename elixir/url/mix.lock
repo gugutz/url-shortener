@@ -1,0 +1,4 @@
+%{
+  "base62": {:hex, :base62, "1.2.1", "4866763e08555a7b3917064e9eef9194c41667276c51b59de2bc42c6ea65f806", [:mix], [{:custom_base, "~> 0.2.1", [hex: :custom_base, repo: "hexpm", optional: false]}], "hexpm"},
+  "custom_base": {:hex, :custom_base, "0.2.1", "4a832a42ea0552299d81652aa0b1f775d462175293e99dfbe4d7dbaab785a706", [:mix], [], "hexpm"},
+}
