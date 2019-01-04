@@ -1,4 +1,6 @@
 defmodule URL do
+  use Application
+
   @moduledoc """
   Documentation for URL.
   """
@@ -15,4 +17,10 @@ defmodule URL do
   def hello do
     :world
   end
+
+  def start(_type, _args) do
+    URL.Supervisor.start_link(name: URL.Supervisor)
+  end
+  
 end
+

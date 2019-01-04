@@ -9,8 +9,9 @@ defmodule URL.Bucket do
     Agent.start_link(fn -> %{} end, name: :urls)
   end
 
-  def get_state do
-    Agent.get(fn state -> state end)
+  def get_state(bucket) do
+    Agent.get(bucket, fn state -> state end)
+  end
 
   def get(bucket, key) do
     Agent.get(bucket, &Map.get(&1, key))
