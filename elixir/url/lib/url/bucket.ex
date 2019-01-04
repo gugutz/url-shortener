@@ -6,10 +6,12 @@ defmodule URL.Bucket do
   """
 
   def start_link(_opts) do
-    Agent.start_link(fn -> %{} end)
+    Agent.start_link(fn -> %{} end, name: :urls)
   end
 
-  
+  def get_state do
+    Agent.get(fn state -> state end)
+
   def get(bucket, key) do
     Agent.get(bucket, &Map.get(&1, key))
   end
