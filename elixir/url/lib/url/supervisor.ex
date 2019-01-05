@@ -7,7 +7,8 @@ defmodule URL.Supervisor do
 
   def init(:ok) do
     children = [
-      {URL.Bucket, name: :urls}
+      {URL.Bucket, name: :urls},
+      {URL.Repo, []}
     ]
     Supervisor.init(children, strategy: :one_for_all)
     # supervise(children, strategy: :one_for_one)
