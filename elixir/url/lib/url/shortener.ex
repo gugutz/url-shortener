@@ -4,6 +4,7 @@ defmodule URL.Shortener do
     {:ok, id} = URL.Counter.get_count(:counter)
     hash = Base62.encode(id)
     URL.Bucket.put(:urls, hash, {url, 1})
+    {:ok, hash}
   end
 
   def decode(hash) do
@@ -14,11 +15,12 @@ defmodule URL.Shortener do
         IO.puts("found the url.")
         {url, hits} = URL.Bucket.get(:urls, hash)
         URL.Bucket.delete(:urls, hash)
-        URL.Bucket.put(:urls, hash, {url, hits + 1})
+        URL.Bucket.put(:urls, hash, {url, (hits + 1)})
         {url, hits}
 
       false ->
-        IO.puts("this key doenst exist in the map")
+        msg = IO.puts("this key doenst exist in the map")
+        {:error, msg}
     end
   end
 end
