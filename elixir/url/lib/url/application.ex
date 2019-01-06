@@ -1,5 +1,4 @@
 defmodule URL.Application do
-
   use Application
 
   def start(_type, _args) do
@@ -7,8 +6,8 @@ defmodule URL.Application do
       {Repo, []}
       ]
     opts = [strategy: :one_for_one, name: URL.Supervisor]
-    Supervisor.start_link(children, opts)
+    URL.Supervisor.start_link(children, opts)
   end
-
+  
 end
 
