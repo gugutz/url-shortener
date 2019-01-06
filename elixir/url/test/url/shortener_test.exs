@@ -7,7 +7,7 @@ defmodule URL.ShortenerTest do
     hash = 10101
     %{hash: hash}
   end
-  
+
   test "it shortens urls into a hash", %{url: url} do
     {:ok, hash} = URL.Shortener.shorten(url)
   end
@@ -16,4 +16,3 @@ defmodule URL.ShortenerTest do
     {:ok, url} = URL.Shortener.expand(hash)
   end
 end
-

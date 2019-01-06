@@ -34,5 +34,6 @@ config :url, Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost"
-  # OR use a URL to connect instead
-  # url: "postgres://postgres:postgres@localhost/ecto_simple"
+
+# OR use a URL to connect instead
+# url: "postgres://postgres:postgres@localhost/ecto_simple"

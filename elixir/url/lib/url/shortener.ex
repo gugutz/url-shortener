@@ -1,18 +1,9 @@
 defmodule URL.Shortener do
-
   def encode(url) do
-    hash = Base62.encode(url)
-    urls = URL.Bucket.get_state(:urls)
-
-    case Map.has_key?(urls, hash) do
-      true ->
-        IO.puts "this url has already been encoded. heres the hash."
-        hash
-      false ->
-        {:ok, url} = Base62.decode(hash)
-        URL.Bucket.put(:urls, hash, url)
-        IO.puts "url shortened and saved."
-    end
+    URL.Counter.increment(:counter)
+    {:ok, id} = URL.Counter.get_count(:counter)
+    hash = Base62.encode(id)
+    URL.Bucket.put(:urls, hash, {url, 1})
   end
 
   def decode(hash) do
@@ -20,11 +11,14 @@ defmodule URL.Shortener do
 
     case Map.has_key?(urls, hash) do
       true ->
-        IO.puts "found the url."
-        URL.Bucket.get(:urls, hash)
+        IO.puts("found the url.")
+        {url, hits} = URL.Bucket.get(:urls, hash)
+        URL.Bucket.delete(:urls, hash)
+        URL.Bucket.put(:urls, hash, {url, hits + 1})
+        {url, hits}
+
       false ->
-        IO.puts "this key doenst exist in the map"
+        IO.puts("this key doenst exist in the map")
     end
   end
-
 end

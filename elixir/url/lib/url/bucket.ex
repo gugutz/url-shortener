@@ -24,7 +24,4 @@ defmodule URL.Bucket do
   def delete(bucket, key) do
     Agent.get_and_update(bucket, &Map.pop(&1, key))
   end
-
 end
-
-  
